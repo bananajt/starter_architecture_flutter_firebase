@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         databaseBuilder: databaseBuilder,
         builder: (BuildContext context, AsyncSnapshot<User> userSnapshot) {
           return MaterialApp(
-            theme: ThemeData(primarySwatch: Colors.indigo),
+            theme: ThemeData(primarySwatch: Colors.yellow),
             debugShowCheckedModeBanner: false,
             home: AuthWidget(userSnapshot: userSnapshot),
             onGenerateRoute: Router.onGenerateRoute,
