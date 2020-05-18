@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:starter_architecture_flutter_firebase/common_widgets/date_time_picker.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/job_entries/format.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/banana_entries/format.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/entry.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/banana.dart';
 import 'package:starter_architecture_flutter_firebase/common_widgets/show_exception_alert_dialog.dart';
 import 'package:starter_architecture_flutter_firebase/routing/router.dart';
 import 'package:starter_architecture_flutter_firebase/services/firestore_database.dart';
 
 class EntryPage extends StatefulWidget {
-  const EntryPage({@required this.job, this.entry});
-  final Job job;
+  const EntryPage({@required this.banana, this.entry});
+  final Banana banana;
   final Entry entry;
 
-  static Future<void> show({BuildContext context, Job job, Entry entry}) async {
+  static Future<void> show({BuildContext context, Banana banana, Entry entry}) async {
     await Navigator.of(context, rootNavigator: true).pushNamed(
       Routes.entryPage,
       arguments: {
-        'job': job,
+        'banana': banana,
         'entry': entry,
       },
     );
@@ -58,7 +58,7 @@ class _EntryPageState extends State<EntryPage> {
     final id = widget.entry?.id ?? documentIdFromCurrentDate();
     return Entry(
       id: id,
-      jobId: widget.job.id,
+      bananaId: widget.banana.id,
       start: start,
       end: end,
       comment: _comment,
@@ -85,7 +85,7 @@ class _EntryPageState extends State<EntryPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2.0,
-        title: Text(widget.job.name),
+        title: Text(widget.banana.name),
         actions: <Widget>[
           FlatButton(
             child: Text(

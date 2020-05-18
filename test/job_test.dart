@@ -1,32 +1,32 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/banana.dart';
 
 void main() {
   group('fromMap', () {
     test('null data', () {
-      final job = Job.fromMap(null, 'abc');
-      expect(job, null);
+      final banana = Banana.fromMap(null, 'abc');
+      expect(banana, null);
     });
-    test('job with all properties', () {
-      final job = Job.fromMap({
+    test('banana with all properties', () {
+      final banana = Banana.fromMap({
         'name': 'Blogging',
         'ratePerHour': 10,
       }, 'abc');
-      expect(job, Job(name: 'Blogging', ratePerHour: 10, id: 'abc'));
+      expect(banana, Banana(name: 'Blogging', ratePerHour: 10, id: 'abc'));
     });
 
     test('missing name', () {
-      final job = Job.fromMap({
+      final banana = Banana.fromMap({
         'ratePerHour': 10,
       }, 'abc');
-      expect(job, null);
+      expect(banana, null);
     });
   });
 
   group('toMap', () {
     test('valid name, ratePerHour', () {
-      final job = Job(name: 'Blogging', ratePerHour: 10, id: 'abc');
-      expect(job.toMap(), {
+      final banana = Banana(name: 'Blogging', ratePerHour: 10, id: 'abc');
+      expect(banana.toMap(), {
         'name': 'Blogging',
         'ratePerHour': 10,
       });

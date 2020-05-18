@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:starter_architecture_flutter_firebase/constants/keys.dart';
 import 'package:starter_architecture_flutter_firebase/constants/strings.dart';
 
-enum TabItem { jobs, entries, account }
+enum TabItem { bananas, entries, account }
 
 class TabItemData {
   const TabItemData(
@@ -13,9 +13,9 @@ class TabItemData {
   final IconData icon;
 
   static const Map<TabItem, TabItemData> allTabs = {
-    TabItem.jobs: TabItemData(
-      key: Keys.jobsTab,
-      title: Strings.jobs,
+    TabItem.bananas: TabItemData(
+      key: Keys.bananasTab,
+      title: Strings.bananas,
       icon: Icons.work,
     ),
     TabItem.entries: TabItemData(

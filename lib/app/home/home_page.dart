@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/account/account_page.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/cupertino_home_scaffold.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/entries/entries_page.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/jobs/jobs_page.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/bananas/bananas_page.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/tab_item.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,17 +12,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TabItem _currentTab = TabItem.jobs;
+  TabItem _currentTab = TabItem.bananas;
 
   final Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
-    TabItem.jobs: GlobalKey<NavigatorState>(),
+    TabItem.bananas: GlobalKey<NavigatorState>(),
     TabItem.entries: GlobalKey<NavigatorState>(),
     TabItem.account: GlobalKey<NavigatorState>(),
   };
 
   Map<TabItem, WidgetBuilder> get widgetBuilders {
     return {
-      TabItem.jobs: (_) => JobsPage(),
+      TabItem.bananas: (_) => BananasPage(),
       TabItem.entries: (context) => EntriesPage.create(context),
       TabItem.account: (_) => AccountPage(),
     };

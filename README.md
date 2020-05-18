@@ -128,9 +128,9 @@ The demo app is a time tracking application. It is complex enough to capture the
 
 ![](media/time-tracker-screenshots.png)
 
-After signing in, users can view, create, edit and delete their jobs. For each job they can view, create, edit and delete the corresponding entries.
+After signing in, users can view, create, edit and delete their bananas. For each banana they can view, create, edit and delete the corresponding entries.
 
-A separate screen shows a daily breakdown of all jobs, hours worked and pay, along with the totals.
+A separate screen shows a daily breakdown of all bananas, hours worked and pay, along with the totals.
 
 All the data is persisted with Firestore, and is kept in sync across multiple devices. 
 
@@ -164,8 +164,8 @@ Services and routing classes are defined at the root, along with constants and c
     /home
       /account
       /entries
-      /job_entries
-      /jobs
+      /banana_entries
+      /bananas
       /models
     /sign_in
   /common_widgets
@@ -185,25 +185,25 @@ Here's the entire Database API for the demo app, showing all the possible CRUD o
 
 ```dart
 class FirestoreDatabase { // implementation omitted for brevity
-  Future<void> setJob(Job job); // create / update
-  Future<void> deleteJob(Job job); // delete
-  Stream<List<Job>> jobsStream(); // read
-  Stream<Job> jobStream({@required String jobId}); // read
+  Future<void> setBanana(Banana banana); // create / update
+  Future<void> deleteBanana(Banana banana); // delete
+  Stream<List<Banana>> bananasStream(); // read
+  Stream<Banana> bananaStream({@required String bananaId}); // read
 
   Future<void> setEntry(Entry entry); // create / update
   Future<void> deleteEntry(Entry entry); // delete
-  Stream<List<Entry>> entriesStream({Job job}); // read
+  Stream<List<Entry>> entriesStream({Banana banana}); // read
 }
 ```
 
-With this setup, creating a widget that shows a list of jobs becomes simple:
+With this setup, creating a widget that shows a list of bananas becomes simple:
 
 ```dart
 @override
 Widget build(BuildContext context) {
   final database = Provider.of<FirestoreDatabase>(context, listen: false);
-  return StreamBuilder<List<Job>>(
-    stream: database.jobsStream(),
+  return StreamBuilder<List<Banana>>(
+    stream: database.bananasStream(),
     builder: (context, snapshot) {
       // TODO: return widget based on snapshot
     },
@@ -215,8 +215,8 @@ For convenience, all available collections and documents are listed in a single 
 
 ```dart
 class APIPath {
-  static String job(String uid, String jobId) => 'users/$uid/jobs/$jobId';
-  static String jobs(String uid) => 'users/$uid/jobs';
+  static String banana(String uid, String bananaId) => 'users/$uid/bananas/$bananaId';
+  static String bananas(String uid) => 'users/$uid/bananas';
   static String entry(String uid, String entryId) =>
       'users/$uid/entries/$entryId';
   static String entries(String uid) => 'users/$uid/entries';
@@ -230,7 +230,7 @@ See the [FirestoreDatabase](https://github.com/bizz84/starter_architecture_flutt
 
 ### Note about stream-dependant services
 
-When using Firestore, is common to organize all the user data inside documents and collections that depend on the `uid`. For example, this app stores the user's data inside the `users/$uid/jobs` and `users/$uid/entries` collections.
+When using Firestore, is common to organize all the user data inside documents and collections that depend on the `uid`. For example, this app stores the user's data inside the `users/$uid/bananas` and `users/$uid/entries` collections.
 
 When reading or writing to those collections, the app needs access to the user `uid`. This can change at runtime as users can sign out and sign back in with a different account.
 
@@ -254,8 +254,9 @@ class Routes {
   static const authWidget = '/';
   static const emailPasswordSignInPageBuilder =
       '/email-password-sign-in-page-builder';
-  static const editJobPage = '/edit-job-page';
+  static const editBananaPage = '/edit-banana-page';
   static const entryPage = '/entry-page';
+  static const editAccountPage = '/edit-account-page';
 }
 ```
 
@@ -276,15 +277,15 @@ Given a page that needs to be presented inside a route, we can call `pushNamed` 
 
 ```dart
 class EntryPage extends StatefulWidget {
-  const EntryPage({@required this.job, this.entry});
-  final Job job;
+  const EntryPage({@required this.banana, this.entry});
+  final Banana banana;
   final Entry entry;
 
-  static Future<void> show({BuildContext context, Job job, Entry entry}) async {
+  static Future<void> show({BuildContext context, Banana banana, Entry entry}) async {
     await Navigator.of(context, rootNavigator: true).pushNamed(
       Routes.entryPage,
       arguments: {
-        'job': job,
+        'banana': banana,
         'entry': entry,
       },
     );

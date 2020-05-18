@@ -3,14 +3,14 @@ import 'package:flutter/foundation.dart';
 class Entry {
   Entry({
     @required this.id,
-    @required this.jobId,
+    @required this.bananaId,
     @required this.start,
     @required this.end,
     this.comment,
   });
 
   String id;
-  String jobId;
+  String bananaId;
   DateTime start;
   DateTime end;
   String comment;
@@ -23,7 +23,7 @@ class Entry {
     final int endMilliseconds = value['end'];
     return Entry(
       id: id,
-      jobId: value['jobId'],
+      bananaId: value['bananaId'],
       start: DateTime.fromMillisecondsSinceEpoch(startMilliseconds),
       end: DateTime.fromMillisecondsSinceEpoch(endMilliseconds),
       comment: value['comment'],
@@ -32,7 +32,7 @@ class Entry {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'jobId': jobId,
+      'bananaId': bananaId,
       'start': start.millisecondsSinceEpoch,
       'end': end.millisecondsSinceEpoch,
       'comment': comment,

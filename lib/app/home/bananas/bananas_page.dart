@@ -2,20 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/job_entries/job_entries_page.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/jobs/edit_job_page.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/jobs/job_list_tile.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/jobs/list_items_builder.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/banana_entries/banana_entries_page.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/bananas/edit_banana_page.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/bananas/banana_list_tile.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/bananas/list_items_builder.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/banana.dart';
 import 'package:starter_architecture_flutter_firebase/common_widgets/show_exception_alert_dialog.dart';
 import 'package:starter_architecture_flutter_firebase/constants/strings.dart';
 import 'package:starter_architecture_flutter_firebase/services/firestore_database.dart';
 
-class JobsPage extends StatelessWidget {
-  Future<void> _delete(BuildContext context, Job job) async {
+class BananasPage extends StatelessWidget {
+  Future<void> _delete(BuildContext context, Banana banana) async {
     try {
       final database = Provider.of<FirestoreDatabase>(context, listen: false);
-      await database.deleteJob(job);
+      await database.deleteBanana(banana);
     } catch (e) {
       showExceptionAlertDialog(
         context: context,
@@ -29,11 +29,11 @@ class JobsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Strings.jobs),
+        title: Text(Strings.bananas),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add, color: Colors.white),
-            onPressed: () => EditJobPage.show(context),
+            onPressed: () => EditBananaPage.show(context),
           ),
         ],
       ),
@@ -43,19 +43,19 @@ class JobsPage extends StatelessWidget {
 
   Widget _buildContents(BuildContext context) {
     final database = Provider.of<FirestoreDatabase>(context, listen: false);
-    return StreamBuilder<List<Job>>(
-      stream: database.jobsStream(),
+    return StreamBuilder<List<Banana>>(
+      stream: database.bananasStream(),
       builder: (context, snapshot) {
-        return ListItemsBuilder<Job>(
+        return ListItemsBuilder<Banana>(
           snapshot: snapshot,
-          itemBuilder: (context, job) => Dismissible(
-            key: Key('job-${job.id}'),
+          itemBuilder: (context, banana) => Dismissible(
+            key: Key('banana-${banana.id}'),
             background: Container(color: Colors.red),
             direction: DismissDirection.endToStart,
-            onDismissed: (direction) => _delete(context, job),
-            child: JobListTile(
-              job: job,
-              onTap: () => JobEntriesPage.show(context, job),
+            onDismissed: (direction) => _delete(context, banana),
+            child: BananaListTile(
+              banana: banana,
+              onTap: () => BananaEntriesPage.show(context, banana),
             ),
           ),
         );

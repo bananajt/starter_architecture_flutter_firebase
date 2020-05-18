@@ -5,24 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/job_entries/entry_list_item.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/job_entries/entry_page.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/jobs/edit_job_page.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/jobs/list_items_builder.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/banana_entries/entry_list_item.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/banana_entries/entry_page.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/bananas/edit_banana_page.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/bananas/list_items_builder.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/entry.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/banana.dart';
 import 'package:starter_architecture_flutter_firebase/common_widgets/show_exception_alert_dialog.dart';
 import 'package:starter_architecture_flutter_firebase/routing/cupertino_tab_view_router.dart';
 import 'package:starter_architecture_flutter_firebase/services/firestore_database.dart';
 
-class JobEntriesPage extends StatelessWidget {
-  const JobEntriesPage({@required this.job});
-  final Job job;
+class BananaEntriesPage extends StatelessWidget {
+  const BananaEntriesPage({@required this.banana});
+  final Banana banana;
 
-  static Future<void> show(BuildContext context, Job job) async {
+  static Future<void> show(BuildContext context, Banana banana) async {
     await Navigator.of(context).pushNamed(
-      CupertinoTabViewRoutes.jobEntriesPage,
-      arguments: job,
+      CupertinoTabViewRoutes.bananaEntriesPage,
+      arguments: banana,
     );
   }
 
@@ -42,43 +42,43 @@ class JobEntriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<FirestoreDatabase>(context, listen: false);
-    return StreamBuilder<Job>(
-      stream: database.jobStream(jobId: job.id),
+    return StreamBuilder<Banana>(
+      stream: database.bananaStream(bananaId: banana.id),
       builder: (context, snapshot) {
-        final job = snapshot.data;
-        final jobName = job?.name ?? '';
+        final banana = snapshot.data;
+        final bananaName = banana?.name ?? '';
         return Scaffold(
           appBar: AppBar(
             elevation: 2.0,
-            title: Text(jobName),
+            title: Text(bananaName),
             centerTitle: true,
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.edit, color: Colors.white),
-                onPressed: () => EditJobPage.show(
+                onPressed: () => EditBananaPage.show(
                   context,
-                  job: job,
+                  banana: banana,
                 ),
               ),
               IconButton(
                 icon: Icon(Icons.add, color: Colors.white),
                 onPressed: () => EntryPage.show(
                   context: context,
-                  job: job,
+                  banana: banana,
                 ),
               ),
             ],
           ),
-          body: _buildContent(context, job),
+          body: _buildContent(context, banana),
         );
       },
     );
   }
 
-  Widget _buildContent(BuildContext context, Job job) {
+  Widget _buildContent(BuildContext context, Banana banana) {
     final database = Provider.of<FirestoreDatabase>(context, listen: false);
     return StreamBuilder<List<Entry>>(
-      stream: database.entriesStream(job: job),
+      stream: database.entriesStream(banana: banana),
       builder: (context, snapshot) {
         return ListItemsBuilder<Entry>(
           snapshot: snapshot,
@@ -86,11 +86,11 @@ class JobEntriesPage extends StatelessWidget {
             return DismissibleEntryListItem(
               key: Key('entry-${entry.id}'),
               entry: entry,
-              job: job,
+              banana: banana,
               onDismissed: () => _deleteEntry(context, entry),
               onTap: () => EntryPage.show(
                 context: context,
-                job: job,
+                banana: banana,
                 entry: entry,
               ),
             );

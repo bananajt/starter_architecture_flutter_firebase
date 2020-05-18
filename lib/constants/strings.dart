@@ -43,8 +43,8 @@ class Strings {
   // Home page
   static const String homePage = 'Home Page';
 
-  // Jobs page
-  static const String jobs = 'Jobs';
+  // Bananas page
+  static const String bananas = 'Bananas';
 
   // Entries page
   static const String entries = 'Entries';

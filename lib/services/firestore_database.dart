@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/entry.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/banana.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/account.dart';
 import 'package:starter_architecture_flutter_firebase/services/firestore_path.dart';
 import 'package:starter_architecture_flutter_firebase/services/firestore_service.dart';
 
@@ -14,31 +15,49 @@ class FirestoreDatabase {
 
   final _service = FirestoreService.instance;
 
-  Future<void> setJob(Job job) async => await _service.setData(
-        path: FirestorePath.job(uid, job.id),
-        data: job.toMap(),
+  Future<void> setBanana(Banana banana) async => await _service.setData(
+        path: FirestorePath.banana(uid, banana.id),
+        data: banana.toMap(),
       );
 
-  Future<void> deleteJob(Job job) async {
-    // delete where entry.jobId == job.jobId
-    final allEntries = await entriesStream(job: job).first;
+  Future<void> deleteBanana(Banana banana) async {
+    // delete where entry.bananaId == banana.bananaId
+    final allEntries = await entriesStream(banana: banana).first;
     for (Entry entry in allEntries) {
-      if (entry.jobId == job.id) {
+      if (entry.bananaId == banana.id) {
         await deleteEntry(entry);
       }
     }
-    // delete job
-    await _service.deleteData(path: FirestorePath.job(uid, job.id));
+    // delete banana
+    await _service.deleteData(path: FirestorePath.banana(uid, banana.id));
   }
 
-  Stream<Job> jobStream({@required String jobId}) => _service.documentStream(
-        path: FirestorePath.job(uid, jobId),
-        builder: (data, documentId) => Job.fromMap(data, documentId),
+  Stream<Banana> bananaStream({@required String bananaId}) => _service.documentStream(
+        path: FirestorePath.banana(uid, bananaId),
+        builder: (data, documentId) => Banana.fromMap(data, documentId),
       );
 
-  Stream<List<Job>> jobsStream() => _service.collectionStream(
-        path: FirestorePath.jobs(uid),
-        builder: (data, documentId) => Job.fromMap(data, documentId),
+  Stream<List<Banana>> bananasStream() => _service.collectionStream(
+        path: FirestorePath.bananas(uid),
+        builder: (data, documentId) => Banana.fromMap(data, documentId),
+      );
+
+  Future<void> setAccount(Account account) async => await _service.setData(
+        path: FirestorePath.account(uid, account.id),
+        data: account.toMap(),
+      );
+
+  Future<void> deleteAccount(Account account) async =>
+      await _service.deleteData(path: FirestorePath.account(uid, account.id));
+
+  Stream<Account> accountStream({@required String accountId}) => _service.documentStream(
+        path: FirestorePath.account(uid, accountId),
+        builder: (data, documentId) => Account.fromMap(data, documentId),
+      );
+
+  Stream<List<Account>> accountsStream() => _service.collectionStream(
+        path: FirestorePath.accounts(uid),
+        builder: (data, documentId) => Account.fromMap(data, documentId),
       );
 
   Future<void> setEntry(Entry entry) async => await _service.setData(
@@ -49,11 +68,11 @@ class FirestoreDatabase {
   Future<void> deleteEntry(Entry entry) async =>
       await _service.deleteData(path: FirestorePath.entry(uid, entry.id));
 
-  Stream<List<Entry>> entriesStream({Job job}) =>
+  Stream<List<Entry>> entriesStream({Banana banana}) =>
       _service.collectionStream<Entry>(
         path: FirestorePath.entries(uid),
-        queryBuilder: job != null
-            ? (query) => query.where('jobId', isEqualTo: job.id)
+        queryBuilder: banana != null
+            ? (query) => query.where('bananaId', isEqualTo: banana.id)
             : null,
         builder: (data, documentID) => Entry.fromMap(data, documentID),
         sort: (lhs, rhs) => rhs.start.compareTo(lhs.start),

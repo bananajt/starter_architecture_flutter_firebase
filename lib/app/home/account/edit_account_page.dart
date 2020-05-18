@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/account.dart';
 import 'package:starter_architecture_flutter_firebase/common_widgets/show_alert_dialog.dart';
 import 'package:starter_architecture_flutter_firebase/common_widgets/show_exception_alert_dialog.dart';
 import 'package:starter_architecture_flutter_firebase/routing/router.dart';
 import 'package:starter_architecture_flutter_firebase/services/firestore_database.dart';
 
-class EditJobPage extends StatefulWidget {
-  const EditJobPage({Key key, this.job}) : super(key: key);
-  final Job job;
+class EditAccountPage extends StatefulWidget {
+  const EditAccountPage({Key key, this.account}) : super(key: key);
+  final Account account;
 
-  static Future<void> show(BuildContext context, {Job job}) async {
+  static Future<void> show(BuildContext context, {Account account}) async {
     await Navigator.of(context, rootNavigator: true).pushNamed(
-      Routes.editJobPage,
-      arguments: job,
+      Routes.editAccountPage,
+      arguments: account,
     );
   }
 
   @override
-  _EditJobPageState createState() => _EditJobPageState();
+  _EditAccountPageState createState() => _EditAccountPageState();
 }
 
-class _EditJobPageState extends State<EditJobPage> {
+class _EditAccountPageState extends State<EditAccountPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _name;
-  int _ratePerHour;
+  String _displayName;
+  String _photoUrl;
+  String _bio;
 
   @override
   void initState() {
     super.initState();
-    if (widget.job != null) {
-      _name = widget.job.name;
-      _ratePerHour = widget.job.ratePerHour;
+    if (widget.account != null) {
+      _displayName = widget.account.displayName;
+      _photoUrl = widget.account.photoUrl;
+      _bio = widget.account.bio;
     }
   }
 
@@ -50,23 +52,23 @@ class _EditJobPageState extends State<EditJobPage> {
     if (_validateAndSaveForm()) {
       try {
         final database = Provider.of<FirestoreDatabase>(context, listen: false);
-        final jobs = await database.jobsStream().first;
+        final accounts = await database.accountsStream().first;
         final allLowerCaseNames =
-            jobs.map((job) => job.name.toLowerCase()).toList();
-        if (widget.job != null) {
-          allLowerCaseNames.remove(widget.job.name.toLowerCase());
+            accounts.map((account) => account.displayName.toLowerCase()).toList();
+        if (widget.account != null) {
+          allLowerCaseNames.remove(widget.account.displayName.toLowerCase());
         }
-        if (allLowerCaseNames.contains(_name.toLowerCase())) {
+        if (allLowerCaseNames.contains(_displayName.toLowerCase())) {
           showAlertDialog(
             context: context,
             title: 'Name already used',
-            content: 'Please choose a different job name',
+            content: 'Please choose a different account name',
             defaultActionText: 'OK',
           );
         } else {
-          final id = widget.job?.id ?? documentIdFromCurrentDate();
-          final job = Job(id: id, name: _name, ratePerHour: _ratePerHour);
-          await database.setJob(job);
+          final id = widget.account?.id ?? documentIdFromCurrentDate();
+          final account = Account(id: id, displayName: _displayName, photoUrl: _photoUrl, bio: _bio);
+          await database.setAccount(account);
           Navigator.of(context).pop();
         }
       } catch (e) {
@@ -84,7 +86,7 @@ class _EditJobPageState extends State<EditJobPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2.0,
-        title: Text(widget.job == null ? 'New Job' : 'Edit Job'),
+        title: Text(widget.account == null ? 'New Account' : 'Edit Account'),
         actions: <Widget>[
           FlatButton(
             child: Text(
@@ -127,21 +129,24 @@ class _EditJobPageState extends State<EditJobPage> {
   List<Widget> _buildFormChildren() {
     return [
       TextFormField(
-        decoration: InputDecoration(labelText: 'Job name'),
+        decoration: InputDecoration(labelText: 'Account name'),
         keyboardAppearance: Brightness.light,
-        initialValue: _name,
+        initialValue: _displayName,
         validator: (value) => value.isNotEmpty ? null : 'Name can\'t be empty',
-        onSaved: (value) => _name = value,
+        onSaved: (value) => _displayName = value,
       ),
       TextFormField(
-        decoration: InputDecoration(labelText: 'Rate per hour'),
+        decoration: InputDecoration(labelText: 'Account bio'),
         keyboardAppearance: Brightness.light,
-        initialValue: _ratePerHour != null ? '$_ratePerHour' : null,
-        keyboardType: TextInputType.numberWithOptions(
-          signed: false,
-          decimal: false,
-        ),
-        onSaved: (value) => _ratePerHour = int.tryParse(value) ?? 0,
+        initialValue: _bio,
+        // validator: (value) => value.isNotEmpty ? null : 'Bio can\'t be empty',
+        onSaved: (value) => _bio = value,
+      ),
+      TextFormField(
+        decoration: InputDecoration(labelText: 'PhotoUrl'),
+        keyboardAppearance: Brightness.light,
+        initialValue: _photoUrl != null ? '$_photoUrl' : null,
+        onSaved: (value) => _photoUrl = value,
       ),
     ];
   }

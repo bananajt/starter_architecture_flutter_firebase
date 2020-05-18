@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/job_entries/format.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/banana_entries/format.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/entry.dart';
-import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/banana.dart';
 
 class EntryListItem extends StatelessWidget {
   const EntryListItem({
     @required this.entry,
-    @required this.job,
+    @required this.banana,
     @required this.onTap,
   });
 
   final Entry entry;
-  final Job job;
+  final Banana banana;
   final VoidCallback onTap;
 
   @override
@@ -39,7 +39,7 @@ class EntryListItem extends StatelessWidget {
     final endTime = TimeOfDay.fromDateTime(entry.end).format(context);
     final durationFormatted = Format.hours(entry.durationInHours);
 
-    final pay = job.ratePerHour * entry.durationInHours;
+    final pay = banana.ratePerHour * entry.durationInHours;
     final payFormatted = Format.currency(pay);
 
     return Column(
@@ -49,7 +49,7 @@ class EntryListItem extends StatelessWidget {
           Text(dayOfWeek, style: TextStyle(fontSize: 18.0, color: Colors.grey)),
           SizedBox(width: 15.0),
           Text(startDate, style: TextStyle(fontSize: 18.0)),
-          if (job.ratePerHour > 0.0) ...<Widget>[
+          if (banana.ratePerHour > 0.0) ...<Widget>[
             Expanded(child: Container()),
             Text(
               payFormatted,
@@ -78,14 +78,14 @@ class DismissibleEntryListItem extends StatelessWidget {
   const DismissibleEntryListItem({
     this.key,
     this.entry,
-    this.job,
+    this.banana,
     this.onDismissed,
     this.onTap,
   });
 
   final Key key;
   final Entry entry;
-  final Job job;
+  final Banana banana;
   final VoidCallback onDismissed;
   final VoidCallback onTap;
 
@@ -98,7 +98,7 @@ class DismissibleEntryListItem extends StatelessWidget {
       onDismissed: (direction) => onDismissed(),
       child: EntryListItem(
         entry: entry,
-        job: job,
+        banana: banana,
         onTap: onTap,
       ),
     );

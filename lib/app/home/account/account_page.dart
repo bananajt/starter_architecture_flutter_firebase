@@ -8,6 +8,9 @@ import 'package:starter_architecture_flutter_firebase/constants/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starter_architecture_flutter_firebase/services/firebase_auth_service.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/account/edit_account_page.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/account.dart';
+import 'package:starter_architecture_flutter_firebase/services/firestore_database.dart';
 
 class AccountPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
@@ -54,7 +57,8 @@ class AccountPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            onPressed: () => _confirmSignOut(context),
+            // onPressed: () => _confirmSignOut(context),
+            onPressed: () => EditAccountPage.show(context),
           ),
         ],
         bottom: PreferredSize(
@@ -75,6 +79,9 @@ class AccountPage extends StatelessWidget {
           borderWidth: 2.0,
         ),
         SizedBox(height: 8),
+        Text ('whatup'),
+        Text(user.uid),
+        Text(user.email),
         if (user.displayName != null)
           Text(
             user.displayName,
